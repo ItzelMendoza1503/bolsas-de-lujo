@@ -1,29 +1,60 @@
 <script setup>
-// Datos locales para evitar fallos de conexión a la API a última hora
-const bolsas = [
-  { id: 1, nombre: "Mochila Classic Canvas", precio: 120, img: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&q=80" },
-  { id: 2, nombre: "Bolso de Cuero Elegance", precio: 350, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500&q=80" },
-  { id: 3, nombre: "Maletín Ejecutivo Pro", precio: 280, img: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&q=80" },
-  { id: 4, nombre: "Morral Urbano Minimal", precio: 95, img: "https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?w=500&q=80" }
-]
+// Usamos la API de DummyJSON para simular productos de lujo (bolsos)
+const { data: productos } = await useFetch('https://dummyjson.com/products/category/womens-bags')
 </script>
 
 <template>
-  <div style="font-family: 'Segoe UI', sans-serif; padding: 20px; background: #fdfdfd; min-height: 100vh;">
-    <header style="text-align: center; border-bottom: 2px solid #1a1a1a; margin-bottom: 40px; background: white; padding: 30px;">
-      <h1 style="margin: 0; letter-spacing: 3px; text-transform: uppercase;">Catálogo de Bolsos</h1>
-      <p style="color: #666; margin-top: 10px;">Proyecto Final - Desarrollo Web SSR</p>
+  <div style="background-color: #fcfaf8; min-height: 100vh; font-family: 'Helvetica Neue', Arial, sans-serif; padding-bottom: 50px;">
+    
+    <header style="text-align: center; padding: 60px 20px; background-color: white; border-bottom: 1px solid #eee;">
+      <h1 style="letter-spacing: 8px; text-transform: uppercase; font-weight: 300; color: #1a1a1a; margin: 0;">Catálogo de Bolsos</h1>
+      <p style="color: #b08d57; font-size: 0.9rem; margin-top: 10px; letter-spacing: 2px;">Proyecto Final - Desarrollo Web SSR</p>
     </header>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto;">
-      <div v-for="b in bolsas" :key="b.id" style="background: white; border: 1px solid #eee; padding: 20px; text-align: center; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.3s;">
-        <img :src="b.img" style="width: 100%; height: 220px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
-        <h3 style="color: #333;">{{ b.nombre }}</h3>
-        <p style="font-weight: bold; color: #b08d57; font-size: 1.3rem; margin: 10px 0;">${{ b.precio }} USD</p>
-        <button style="background: #1a1a1a; color: white; border: none; padding: 12px 20px; cursor: pointer; border-radius: 5px; width: 100%; font-weight: bold; letter-spacing: 1px;">
-          VER DETALLES
-        </button>
+    <main style="max-width: 1200px; margin: 0 auto; padding: 40px 20px;">
+      <div v-if="productos" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px;">
+        
+        <div v-for="item in productos.products" :key="item.id" 
+          style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s ease;">
+          
+          <img :src="item.thumbnail" :alt="item.title" style="width: 100%; height: 250px; object-fit: cover;">
+          
+          <div style="padding: 20px; text-align: center;">
+            <h3 style="font-size: 1.1rem; color: #333; margin-bottom: 8px; height: 50px; overflow: hidden;">{{ item.title }}</h3>
+            <p style="color: #b08d57; font-weight: bold; font-size: 1.2rem;">${{ item.price }} USD</p>
+            
+            <button style="margin-top: 15px; background: #1a1a1a; color: white; border: none; padding: 10px 25px; cursor: pointer; border-radius: 4px; font-size: 0.8rem; letter-spacing: 1px;">
+              VER DETALLES
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
+
+      <div v-else style="text-align: center; padding: 50px;">
+        <p>Cargando colección exclusiva...</p>
+      </div>
+
+      <section style="margin-top: 80px; text-align: center; padding: 60px; background-color: white; border-radius: 15px; border: 1px solid #f0e6d2;">
+        <h2 style="color: #1a1a1a; text-transform: uppercase; letter-spacing: 3px; font-size: 1.5rem;">¿Buscas un diseño personalizado?</h2>
+        <p style="color: #666; margin-bottom: 30px;">Si no encuentras el modelo ideal en nuestro catálogo, contáctanos para una asesoría VIP.</p>
+        
+        <NuxtLink to="/contacto" 
+          style="display: inline-block; background: #1a1a1a; color: #d4af37; padding: 18px 40px; text-decoration: none; font-weight: bold; border-radius: 5px; border: 2px solid #1a1a1a; transition: 0.3s; letter-spacing: 2px;">
+          IR AL FORMULARIO DE CONTACTO
+        </NuxtLink>
+      </section>
+
+    </main>
+
+    <footer style="text-align: center; color: #999; font-size: 0.8rem; padding: 40px 0;">
+      &copy; 2026 Boutique de Lujo - Itzel Mendoza
+    </footer>
   </div>
 </template>
+
+<style scoped>
+/* Efecto al pasar el mouse sobre las tarjetas */
+div[style*="transition"] :hover {
+  transform: translateY(-5px);
+}
+</style>
